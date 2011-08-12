@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Caching;
 using System.IO;
 using System.Xml;
+using System.Web;
 
 
 namespace GameMotor
@@ -17,50 +18,58 @@ namespace GameMotor
 
         public RoundControl()
         {
-            MinutesPerRound = string.IsNullOrEmpty(GameSettings.RoundSpan) ? 60 : int.Parse(GameSettings.RoundSpan);
-            if (!Directory.Exists(GameSettings.Xml))
-                Directory.CreateDirectory(GameSettings.Xml);
+            MinutesPerRound = string.IsNullOrEmpty(GameSettings.RoundSpan) ? 60 : int.Parse(GameSettings.RoundSpan);            
         }
-
-        public Cache cache = new Cache();
 
         public List<string> roundLog = null;
 
         public string CACHE_KEY = "RoundStatus";
 
+        public delegate void RoundExecutionDelegate();
+        public event RoundExecutionDelegate OnRoundExecution;
+
         public void StartRoundControl()
         {
             roundLog = new List<string>();
-            CheckRoundAction();
+            DateTime now = DateTime.Now;            
+            try { CheckRoundAction(); } catch (Exception error) { XmlLogger.Write(now, DateTime.Now, error.Message); }
         }
 
-        public void ExecuteRoundCalculation()
+       /* public void ExecuteRoundCalculation()
         {
             roundLog.Add(DateTime.Now.ToString());
-        }
+        }*/
 
         public void CheckRoundAction()
         {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.Now;            
+            Cache cache = new Cache();
 
-            //roundLog.Add(CurrentRoundHasRun(now).ToString());
             if (now.Minute % MinutesPerRound == 0 && !CurrentRoundHasRun(now))
             {
                 //TODO create logic to allow rollback
                 //TODO block actions during roung calculation
 
-                //Execute round calculation
-                ExecuteRoundCalculation();
+                //Execute round
+                if (OnRoundExecution != null)
+                    OnRoundExecution();
+                //ExecuteRoundCalculation();
 
                 //Save now on lastExecutionDate
                 lastExecutionDate = now;
 
                 now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
+                XmlLogger.Write(lastExecutionDate, DateTime.Now, "");
                 //Sleep minutesPerRound minutes
-                cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
+                
+                //HttpContext.Current.Cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
+                //cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
+                cache.Insert(CACHE_KEY, "1", null, now.AddSeconds(10), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
             }
             else
             {
+                XmlLogger.Write(now, DateTime.Now, "Not executed");
+                //HttpContext.Current.Cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
                 cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
             }
         }

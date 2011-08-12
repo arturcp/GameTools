@@ -10,15 +10,29 @@ namespace GameMotor
 {
     public static class XmlLogger
     {
-        public static void Create()
+        private static string FILENAME = "rounds.xml";
+
+        public static void Initialize()
+        {
+            if (!Directory.Exists(GameSettings.Xml))
+                Directory.CreateDirectory(GameSettings.Xml);
+
+            if (!File.Exists(string.Format(GameSettings.Xml, FILENAME)))
+                XmlLogger.Create();
+        }
+
+        private static void Create()
         {
             DataSet ds = new DataSet();
-            ds.Tables[0].Columns.Add(new DataColumn("ExecutionPlan", typeof(DateTime)));
-            ds.Tables[0].Columns.Add(new DataColumn("StartedOn", typeof(string)));
-            ds.Tables[0].Columns.Add(new DataColumn("FinishedOn", typeof(string)));
-            ds.Tables[0].Columns.Add(new DataColumn("Comment", typeof(string)));
+            DataTable dt = new DataTable();
+            //ds.Tables[0].Columns.Add(new DataColumn("ExecutionPlan", typeof(DateTime)));
+            dt.Columns.Add(new DataColumn("StartedOn", typeof(string)));
+            dt.Columns.Add(new DataColumn("FinishedOn", typeof(string)));
+            dt.Columns.Add(new DataColumn("Comment", typeof(string)));
 
-            using (FileStream xml = new FileStream(GameSettings.Xml, System.IO.FileMode.Open))
+            ds.Tables.Add(dt);
+
+            using (FileStream xml = new FileStream(string.Format("{0}/{1}", GameSettings.Xml, FILENAME), System.IO.FileMode.Open))
             {
                 try
                 {
@@ -31,16 +45,16 @@ namespace GameMotor
             }
         }
 
-        public static void Write(DateTime executionPlan, DateTime? startedOn, DateTime? finishedOn, string comment)
+        public static void Write(DateTime? startedOn, DateTime? finishedOn, string comment) //DateTime executionPlan, 
         {
             DataSet ds = new DataSet();
-            using (FileStream xml = new FileStream(GameSettings.Xml, System.IO.FileMode.Append))
+            using (FileStream xml = new FileStream(string.Format("{0}/{1}", GameSettings.Xml, FILENAME), System.IO.FileMode.Append))
             {
                 try
                 {
                     ds.ReadXml(xml);
                     DataRow dr = ds.Tables[0].NewRow();
-                    dr["ExecutionPlan"] = executionPlan;
+                    //dr["ExecutionPlan"] = executionPlan;
                     dr["StartedOn"] = startedOn.HasValue ? startedOn.ToString() : string.Empty;
                     dr["FinishedOn"] = finishedOn.HasValue ? finishedOn.ToString() : string.Empty;
                     dr["Comment"] = comment;
@@ -53,6 +67,21 @@ namespace GameMotor
                 }
             }
             
+        }
+
+        public static string ShowIndex()
+        {
+             DataSet ds = new DataSet();
+             using (FileStream xml = new FileStream(string.Format("{0}/{1}", GameSettings.Xml, FILENAME), System.IO.FileMode.Append))
+             {
+                 try
+                 {
+                     ds.ReadXml(xml);
+                 }
+                 catch { }
+             }
+
+             return ds.GetXml();
         }
         
     }
