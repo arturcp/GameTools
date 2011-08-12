@@ -1,0 +1,5 @@
+C:\Documents and Settings\Usuario\projects\Game.Machine\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Usuario\projects\Game.Machine\bin\Debug\Game.Machine.dll
+C:\Documents and Settings\Usuario\projects\Game.Machine\bin\Debug\Game.Machine.pdb
+C:\Documents and Settings\Usuario\projects\Game.Machine\obj\Debug\Game.Machine.dll
+C:\Documents and Settings\Usuario\projects\Game.Machine\obj\Debug\Game.Machine.pdb
