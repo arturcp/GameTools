@@ -7,7 +7,7 @@ using System.IO;
 using System.Xml;
 
 
-namespace Game.Machine
+namespace GameMotor
 {
     public class RoundControl
     {

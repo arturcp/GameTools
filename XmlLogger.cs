@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.IO;
 
-namespace Game.Machine
+namespace GameMotor
 {
     public static class XmlLogger
     {

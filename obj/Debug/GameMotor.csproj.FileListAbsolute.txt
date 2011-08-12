@@ -1,0 +1,5 @@
+C:\Users\arprado\GitProjetcs\GameMotor\bin\Debug\GameMotor.dll
+C:\Users\arprado\GitProjetcs\GameMotor\bin\Debug\GameMotor.pdb
+C:\Users\arprado\GitProjetcs\GameMotor\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\arprado\GitProjetcs\GameMotor\obj\Debug\GameMotor.dll
+C:\Users\arprado\GitProjetcs\GameMotor\obj\Debug\GameMotor.pdb

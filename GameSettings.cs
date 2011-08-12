@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace Game.Machine
+namespace GameMotor
 {
     public static class GameSettings
     {

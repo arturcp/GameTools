@@ -8,8 +8,8 @@
     <ProjectGuid>{313B8B68-29A6-46D3-A5A6-C2949377808D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Game.Machine</RootNamespace>
-    <AssemblyName>Game.Machine</AssemblyName>
+    <RootNamespace>GameMotor</RootNamespace>
+    <AssemblyName>GameMotor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
