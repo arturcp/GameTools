@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using System.Data.Common;
 using System.IO;
+using System.Xml;
 
 namespace GameMotor
 {
     public static class XmlLogger
     {
         private static string FILENAME = "rounds.xml";
+
+        public static string FilePath { get { return string.Format("{0}\\{1}_{2}", GameSettings.Xml, GameSettings.ApplicationKey, FILENAME); } }
 
         public static void Initialize()
         {
@@ -23,66 +21,43 @@ namespace GameMotor
 
         private static void Create()
         {
-            DataSet ds = new DataSet();
-            DataTable dt = new DataTable();
-            //ds.Tables[0].Columns.Add(new DataColumn("ExecutionPlan", typeof(DateTime)));
-            dt.Columns.Add(new DataColumn("StartedOn", typeof(string)));
-            dt.Columns.Add(new DataColumn("FinishedOn", typeof(string)));
-            dt.Columns.Add(new DataColumn("Comment", typeof(string)));
+            XmlDocument document = new XmlDocument();
+            XmlDeclaration declaration = document.CreateXmlDeclaration("1.0", "UTF-8", null);
+            
+            document.AppendChild(declaration);
 
-            ds.Tables.Add(dt);
-
-            using (FileStream xml = new FileStream(string.Format("{0}/{1}", GameSettings.Xml, FILENAME), System.IO.FileMode.Open))
-            {
-                try
-                {
-                    ds.WriteXml(xml);
-                }
-                catch
-                {
-                    //TODO Log error
-                }
-            }
+            XmlElement element = document.CreateElement("rounds");            
+            document.AppendChild(element);
+            document.Save(FilePath);            
         }
 
-        public static void Write(DateTime? startedOn, DateTime? finishedOn, string comment) //DateTime executionPlan, 
+        public static void Write(DateTime? startedOn, DateTime? finishedOn, string comments) //DateTime executionPlan, 
         {
-            DataSet ds = new DataSet();
-            using (FileStream xml = new FileStream(string.Format("{0}/{1}", GameSettings.Xml, FILENAME), System.IO.FileMode.Append))
-            {
-                try
-                {
-                    ds.ReadXml(xml);
-                    DataRow dr = ds.Tables[0].NewRow();
-                    //dr["ExecutionPlan"] = executionPlan;
-                    dr["StartedOn"] = startedOn.HasValue ? startedOn.ToString() : string.Empty;
-                    dr["FinishedOn"] = finishedOn.HasValue ? finishedOn.ToString() : string.Empty;
-                    dr["Comment"] = comment;
-                    ds.Tables[0].Rows.Add(dr);
-                    ds.WriteXml(xml);
-                }
-                catch
-                {
-                    //TODO Log error
-                }
-            }
-            
+            XmlDocument document = new XmlDocument();
+            //document.LoadXml(FilePath);
+            document.Load(FilePath);
+
+            XmlElement round = document.CreateElement("round");
+            XmlElement startedTime = document.CreateElement("startedOn");
+            startedTime.InnerText = startedOn.HasValue ? startedOn.ToString() : string.Empty;
+            XmlElement finishedTime = document.CreateElement("finishedOn");
+            finishedTime.InnerText = finishedOn.HasValue ? finishedOn.ToString() : string.Empty;
+            XmlElement comment = document.CreateElement("comments");
+            comment.InnerText = comments;
+
+            round.AppendChild(startedTime);
+            round.AppendChild(finishedTime);
+            round.AppendChild(comment);            
+
+            document.DocumentElement.AppendChild(round);
+            document.Save(FilePath);
         }
 
         public static string ShowIndex()
         {
-             DataSet ds = new DataSet();
-             using (FileStream xml = new FileStream(string.Format("{0}/{1}", GameSettings.Xml, FILENAME), System.IO.FileMode.Append))
-             {
-                 try
-                 {
-                     ds.ReadXml(xml);
-                 }
-                 catch { }
-             }
-
-             return ds.GetXml();
-        }
-        
+            XmlDocument document = new XmlDocument();
+            document.Load(FilePath);
+            return document.OuterXml;
+        }        
     }
 }
