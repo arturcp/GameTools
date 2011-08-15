@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using System.Web;
 using System.Web.Caching;
 
@@ -9,13 +7,10 @@ namespace GameMotor
 {
     public class RoundControl
     {
-        //private DateTime lastExecutionDate = DateTime.Now.Subtract(new TimeSpan(0, 1, 0, 0, 0));
-
         private int MinutesPerRound { get; set; }
         private string ExecutionKey { get; set; }
         private string CacheKey { get; set; }
         private XmlLogger xmlLogger;
-        //private bool isRunning = false;
         public bool IsRunning { 
             get {
                 var cache = HttpRuntime.Cache;
@@ -29,26 +24,6 @@ namespace GameMotor
                 var cache = HttpRuntime.Cache;
                 cache[CacheKey + ".IsRunning"] = value;
             } 
-        }
-
-
-        public DateTime LastExecutionDate
-        {
-            get
-            {
-                var cache = HttpRuntime.Cache;
-                if (cache.Get(CacheKey + ".LastExecutionDate") != null)
-                    return DateTime.Parse(cache[CacheKey + ".LastExecutionDate"].ToString());
-                else
-                    //PRECISO PEGAR DO XML ou retornar null
-                    return DateTime.Now.Subtract(new TimeSpan(0, 1, 0, 0, 0));
-            }
-
-            set
-            {
-                var cache = HttpRuntime.Cache;
-                cache[CacheKey + ".LastExecutionDate"] = value;
-            }
         }
 
         public RoundControl(string executionKey, int roundSpan)
@@ -103,10 +78,10 @@ namespace GameMotor
                     OnRoundExecution();
 
                 //Save now on lastExecutionDate
-                LastExecutionDate = now;
+                DateTime lastExecutionDate = now;
 
                 now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
-                xmlLogger.Write(LastExecutionDate, DateTime.Now, "");
+                xmlLogger.Write(lastExecutionDate, DateTime.Now, "");
              
                 //Sleep minutesPerRound minutes                
                 cache.Insert(CacheKey, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
@@ -126,7 +101,13 @@ namespace GameMotor
 
         private bool CurrentRoundHasRun(DateTime now)
         {
-            return (now.Year == LastExecutionDate.Year && now.Month == LastExecutionDate.Month && now.Day == LastExecutionDate.Day && now.Hour == LastExecutionDate.Hour && now.Minute == LastExecutionDate.Minute);
-        }
+            DateTime? date = xmlLogger.GetLastExecutionDate();
+
+            if (date == null) return false;
+
+            DateTime lastDate = date.Value;
+
+            return (now.Year == lastDate.Year && now.Month == lastDate.Month && now.Day == lastDate.Day && now.Hour == lastDate.Hour && now.Minute == lastDate.Minute);
+        }       
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace GameMotor
 {
@@ -63,6 +64,36 @@ namespace GameMotor
             XmlDocument document = new XmlDocument();
             document.Load(FilePath);
             return document.OuterXml;
-        }        
+        }
+
+        public DateTime? GetLastExecutionDate()
+        {
+            DateTime? result = new DateTime();
+            //http://www.codeproject.com/KB/cpp/myXPath.aspx
+            XPathDocument doc = new XPathDocument(FilePath);
+            XPathNavigator nav = doc.CreateNavigator();
+
+            // Compile a standard XPath expression
+
+            XPathExpression expr;
+            expr = nav.Compile("/rounds/round[comments='']/startedOn[last()]");
+            XPathNodeIterator iterator = nav.Select(expr);
+
+            // Iterate on the node set
+            try
+            {
+                while (iterator.MoveNext())
+                {
+                    XPathNavigator nav2 = iterator.Current.Clone();
+                    result = DateTime.Parse(nav2.Value);
+                }
+            }
+            catch
+            {
+                result = null;
+            }
+
+            return result;
+        }
     }
 }
