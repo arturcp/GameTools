@@ -4,22 +4,28 @@ using System.Xml;
 
 namespace GameMotor
 {
-    public static class XmlLogger
+    public class XmlLogger
     {
-        private static string FILENAME = "rounds.xml";
+        public string ExecutionKey { get; set; }
+        public XmlLogger(string executionKey)
+        {
+            this.ExecutionKey = executionKey;
+        }
 
-        public static string FilePath { get { return string.Format("{0}\\{1}_{2}", GameSettings.Xml, GameSettings.ApplicationKey, FILENAME); } }
+        private string FILENAME = "RoundControl.xml";
 
-        public static void Initialize()
+        public string FilePath { get { return string.Format("{0}\\{1}-{2}", GameSettings.Xml, this.ExecutionKey, FILENAME); } }
+
+        public void Initialize()
         {
             if (!Directory.Exists(GameSettings.Xml))
                 Directory.CreateDirectory(GameSettings.Xml);
 
             if (!File.Exists(string.Format(GameSettings.Xml, FILENAME)))
-                XmlLogger.Create();
+                Create();
         }
 
-        private static void Create()
+        private void Create()
         {
             XmlDocument document = new XmlDocument();
             XmlDeclaration declaration = document.CreateXmlDeclaration("1.0", "UTF-8", null);
@@ -31,10 +37,9 @@ namespace GameMotor
             document.Save(FilePath);            
         }
 
-        public static void Write(DateTime? startedOn, DateTime? finishedOn, string comments) //DateTime executionPlan, 
+        public void Write(DateTime? startedOn, DateTime? finishedOn, string comments) //DateTime executionPlan, 
         {
             XmlDocument document = new XmlDocument();
-            //document.LoadXml(FilePath);
             document.Load(FilePath);
 
             XmlElement round = document.CreateElement("round");
@@ -53,7 +58,7 @@ namespace GameMotor
             document.Save(FilePath);
         }
 
-        public static string ShowIndex()
+        public string ShowIndex()
         {
             XmlDocument document = new XmlDocument();
             document.Load(FilePath);

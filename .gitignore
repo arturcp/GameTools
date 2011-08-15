@@ -1,6 +1,6 @@
-/bin/*
-/obj/*
-bin/*
+bin/Debug/*.*
 obj/*
 Thumbs.db
 *.pdb
+bin/**/* 
+bin

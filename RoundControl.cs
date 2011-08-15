@@ -9,16 +9,25 @@ namespace GameMotor
 {
     public class RoundControl
     {
-        public DateTime lastExecutionDate = DateTime.Now.Subtract(new TimeSpan(0, 1, 0, 0, 0));
+        private DateTime lastExecutionDate = DateTime.Now.Subtract(new TimeSpan(0, 1, 0, 0, 0));
 
-        public int MinutesPerRound { get; set; }
-        public string CACHE_KEY = string.Empty;
+        private int MinutesPerRound { get; set; }
+        private string ExecutionKey { get; set; }
+        private string CacheKey { get; set; }
+        private XmlLogger xmlLogger;
+        private bool isRunning = false;
 
-        public RoundControl()
+        public RoundControl(string executionKey, int roundSpan)
         {
-            MinutesPerRound = string.IsNullOrEmpty(GameSettings.RoundSpan) ? 60 : int.Parse(GameSettings.RoundSpan);
-            this.CACHE_KEY = string.Concat("RoundStatus.", GameSettings.ApplicationKey);
+            MinutesPerRound = roundSpan <= 0 ? 60 : roundSpan;
+            this.ExecutionKey = executionKey;
+            this.CacheKey = string.Concat("RoundStatus.", this.ExecutionKey);
+            xmlLogger = new XmlLogger(this.ExecutionKey);
         }
+
+        public RoundControl(int roundSpan) : this("default", roundSpan){}
+
+        public RoundControl() : this("default", 0){ }
 
         public List<string> roundLog = null;        
 
@@ -27,15 +36,22 @@ namespace GameMotor
 
         public void StartRoundControl()
         {
-            XmlLogger.Initialize();
+            xmlLogger.Initialize();
             roundLog = new List<string>();
-            DateTime now = DateTime.Now;            
-            try { CheckRoundAction(); } catch (Exception error) { XmlLogger.Write(now, DateTime.Now, error.Message); }
+            DateTime now = DateTime.Now;
+            try { 
+                CheckRoundAction();
+                isRunning = true;
+            }
+            catch (Exception error) { 
+                xmlLogger.Write(now, DateTime.Now, error.Message); 
+            }
         }
 
         public void StopRoundControl()
         {
-            HttpRuntime.Cache.Remove(this.CACHE_KEY);
+            isRunning = false;
+            HttpRuntime.Cache.Remove(this.CacheKey);
         }
 
         public void CheckRoundAction()
@@ -56,39 +72,27 @@ namespace GameMotor
                 lastExecutionDate = now;
 
                 now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
-                XmlLogger.Write(lastExecutionDate, DateTime.Now, "");
+                xmlLogger.Write(lastExecutionDate, DateTime.Now, "");
              
                 //Sleep minutesPerRound minutes                
-                cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
+                cache.Insert(CacheKey, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
             }
             else
             {
-                XmlLogger.Write(now, DateTime.Now, "Not executed");
-                cache.Insert(CACHE_KEY, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
+                xmlLogger.Write(now, DateTime.Now, "Not executed");
+                cache.Insert(CacheKey, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
             }
         }
 
-
         public void RoundCallback(String k, Object v, CacheItemRemovedReason r)
         {
-            CheckRoundAction();
+            if (isRunning)
+                CheckRoundAction();
         }
 
         private bool CurrentRoundHasRun(DateTime now)
         {
             return (now.Year == lastExecutionDate.Year && now.Month == lastExecutionDate.Month && now.Day == lastExecutionDate.Day && now.Hour == lastExecutionDate.Hour && now.Minute == lastExecutionDate.Minute);
-        }
-
-        private void LogRoundExecution()
-        {
-            using (XmlTextWriter writer = new XmlTextWriter(GameSettings.Xml, Encoding.Default))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("Executions");
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
-            }            
-
         }
     }
 }
