@@ -67,7 +67,8 @@ namespace GameMotor
         public void CheckRoundAction()
         {
             DateTime now = DateTime.Now;            
-            var cache = HttpRuntime.Cache;
+            //var cache = HttpRuntime.Cache;
+            AspnetCache cache = new AspnetCache();
             bool hasRun = CurrentRoundHasRun(now);
             string comment = string.Empty;
             if (now.Minute % MinutesPerRound == 0 && !hasRun)
@@ -86,12 +87,14 @@ namespace GameMotor
                 xmlLogger.Write(lastExecutionDate, DateTime.Now, comment);
              
                 //Sleep minutesPerRound minutes                
-                cache.Insert(CacheKey, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
+                //cache.Insert(CacheKey, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
+                cache.Insert(CacheKey, "1", now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
             }
             else
             {
                 //xmlLogger.Write(now, DateTime.Now, "Not executed");
-                cache.Insert(CacheKey, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
+                //cache.Insert(CacheKey, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
+                cache.Insert(CacheKey, "1", now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
             }
         }
 
