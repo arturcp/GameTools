@@ -60,6 +60,7 @@ namespace GameMotor
         public void StopRoundControl()
         {
             IsRunning = false;
+            xmlLogger.Write(DateTime.Now, DateTime.Now, "Stopped by user");
             HttpRuntime.Cache.Remove(this.CacheKey);
         }
 
@@ -67,28 +68,29 @@ namespace GameMotor
         {
             DateTime now = DateTime.Now;            
             var cache = HttpRuntime.Cache;
-
-            if (now.Minute % MinutesPerRound == 0 && !CurrentRoundHasRun(now))
+            bool hasRun = CurrentRoundHasRun(now);
+            string comment = string.Empty;
+            if (now.Minute % MinutesPerRound == 0 && !hasRun)
             {
                 //TODO create logic to allow rollback
                 //TODO block actions during roung calculation
 
                 //Execute round
                 if (OnRoundExecution != null)
-                    OnRoundExecution();
+                    try{OnRoundExecution();}catch (Exception error){comment = error.Message;}
 
                 //Save now on lastExecutionDate
                 DateTime lastExecutionDate = now;
 
                 now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
-                xmlLogger.Write(lastExecutionDate, DateTime.Now, "");
+                xmlLogger.Write(lastExecutionDate, DateTime.Now, comment);
              
                 //Sleep minutesPerRound minutes                
                 cache.Insert(CacheKey, "1", null, now.AddMinutes(MinutesPerRound), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);		
             }
             else
             {
-                xmlLogger.Write(now, DateTime.Now, "Not executed");
+                //xmlLogger.Write(now, DateTime.Now, "Not executed");
                 cache.Insert(CacheKey, "1", null, now.AddMinutes(now.Minute % MinutesPerRound).AddSeconds(-1 * now.Second), TimeSpan.Zero, CacheItemPriority.Normal, RoundCallback);
             }
         }

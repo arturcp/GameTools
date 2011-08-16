@@ -22,7 +22,7 @@ namespace GameMotor
             if (!Directory.Exists(GameSettings.Xml))
                 Directory.CreateDirectory(GameSettings.Xml);
 
-            if (!File.Exists(string.Format(GameSettings.Xml, FilePath)))
+            if (!File.Exists(FilePath))
                 Create();
         }
 
