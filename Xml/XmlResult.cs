@@ -1,30 +1,24 @@
-﻿using System;
-using System.Web.Mvc;
-using System.IO;
+﻿using System.Web.Mvc;
 using System.Xml.Serialization;
-using System.Web;
 
-namespace GameMotor
+namespace GameMotor.Xml
 {
-    public class XmlActionResult<T> : ActionResult
+    public class XmlResult : ActionResult
     {
-        public T Data { private get; set; }
+        private object _objectToSerialize;
+
+        public XmlResult(object objectToSerialize)
+        {
+            _objectToSerialize = objectToSerialize;
+        }
 
         public override void ExecuteResult(ControllerContext context)
         {
-            HttpContextBase httpContextBase = context.HttpContext;
-            httpContextBase.Response.Buffer = true;
-            httpContextBase.Response.Clear();
-
-            string fileName = DateTime.Now.ToString("ddmmyyyyhhss") + ".xml";
-            //httpContextBase.Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
-            httpContextBase.Response.ContentType = "text/xml";
-
-            using (StringWriter writer = new StringWriter())
+            if (_objectToSerialize != null)
             {
-                XmlSerializer xml = new XmlSerializer(typeof(T));
-                xml.Serialize(writer, Data);
-                httpContextBase.Response.Write(writer);
+                var xs = new XmlSerializer(_objectToSerialize.GetType());
+                context.HttpContext.Response.ContentType = "text/xml";
+                xs.Serialize(context.HttpContext.Response.Output, _objectToSerialize);
             }
         }
     }
