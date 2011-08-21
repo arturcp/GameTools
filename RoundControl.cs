@@ -43,6 +43,28 @@ namespace GameMotor
         public delegate void RoundExecutionDelegate();
         public event RoundExecutionDelegate OnRoundExecution;
 
+        #region Schedule
+        public void ScheduleStart(DateTime timeToStart)
+        {
+            DateTime now = DateTime.Now;
+            if (timeToStart <= now && !IsRunning)
+                StartRoundControl();
+            else
+            {
+                AspnetCache cache = new AspnetCache();
+                TimeSpan ts = timeToStart - DateTime.Now;
+                cache.Insert("Schedule", "1", now.AddSeconds(ts.Seconds), TimeSpan.Zero, CacheItemPriority.Normal, ScheduleCallback);
+            }
+        }
+
+        public void ScheduleCallback(String k, Object v, CacheItemRemovedReason r)
+        {
+            if (!IsRunning)
+                StartRoundControl();
+        }
+        #endregion
+
+
         public void StartRoundControl()
         {
             xmlLogger.Initialize();

@@ -1,0 +1,9 @@
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\Samples.dll
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\Samples.pdb
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\EntityFramework.dll
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\GameMotor.dll
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\GameMotor.pdb
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\EntityFramework.xml
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\obj\Debug\Samples.dll
+C:\Documents and Settings\Usuario\projects\GameMotor\Samples\obj\Debug\Samples.pdb

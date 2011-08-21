@@ -11,6 +11,7 @@ namespace GameMotor
         public XmlLogger(string executionKey)
         {
             this.ExecutionKey = executionKey;
+            GameSettings.Xml = System.Web.HttpContext.Current.Server.MapPath(GameSettings.RelativeXml);
         }
 
         private string FILENAME = "RoundControl.xml";
@@ -18,7 +19,7 @@ namespace GameMotor
         public string FilePath { get { return string.Format("{0}\\{1}-{2}", GameSettings.Xml, this.ExecutionKey, FILENAME); } }
 
         public void Initialize()
-        {
+        {           
             if (!Directory.Exists(GameSettings.Xml))
                 Directory.CreateDirectory(GameSettings.Xml);
 
