@@ -19,9 +19,26 @@
         <input type="submit" value="Parar"/>
     <% } %>
 
-    <% using(Html.BeginForm("Schedule", "Home", FormMethod.Post, null)){ %>
-        Agendar para <input type="text" name="scheduleDate" value="<%= DateTime.Now.AddMinutes(1) %>"/>
-        <input type="submit" value="Iniciar"/>
+    <% if (ViewBag.IsSchedule == null) { %>
+        <% using(Html.BeginForm("Schedule", "Home", FormMethod.Post, null)){ %>
+            Agendar para <input type="text" name="scheduleDate" value="<%= DateTime.Now.AddMinutes(1) %>"/>
+            <input type="submit" value="Iniciar"/>
+        <% } %>
+    <% } %>
+
+    <% if (ViewBag.IsSchedule != null)
+       { %>
+            <script type="text/javascript">
+            TargetDate = '<%= ViewBag.IsSchedule %>';
+            BackColor = "palegreen";
+            ForeColor = "navy";
+            CountActive = true;
+            CountStepper = -1;
+            LeadingZero = true;
+            DisplayFormat = "%%D%% Days, %%H%% Hours, %%M%% Minutes, %%S%% Seconds.";
+            FinishMessage = "Estamos em execução";
+            </script>
+            <script type="text/javascript" language="JavaScript" src="../../Scripts/countdown.js"></script>
     <% } %>
 
 </asp:Content>

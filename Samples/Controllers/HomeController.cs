@@ -41,6 +41,10 @@ namespace Samples.Controllers
             round.ScheduleStart(date);
 
             ViewBag.Message = "Processo agendado";
+            string hour = date.Hour < 12? date.ToShortTimeString() + " AM" : string.Format("{0}:{1}:{2} PM", date.Hour - 12, date.Minute, date.Second);
+            string formattedDate = date.Month.ToString().PadLeft(2, '0') + "/" + date.Day.ToString().PadLeft(2, '0') + "/" + date.Year.ToString().PadLeft(4, '0');
+            ViewBag.IsSchedule = string.Format("{0} {1}", formattedDate, hour);
+
             return View("Index");
         }
 
