@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace GameMotor
+namespace GameMotor.Xml
 {
     public class XmlLogger
     {
