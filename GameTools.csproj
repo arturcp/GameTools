@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\AspnetCache.cs" />
+    <Compile Include="Dice\DiceRoller.cs" />
     <Compile Include="GameSettings.cs" />
     <Compile Include="Cache\ICache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
