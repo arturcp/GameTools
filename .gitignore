@@ -4,3 +4,5 @@ Thumbs.db
 *.pdb
 bin/**/* 
 bin
+Samples/bin/*
+Samples/obj/*

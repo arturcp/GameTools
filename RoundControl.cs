@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Caching;
-using GameMotor.Xml;
+using GameTools.Xml;
 
-namespace GameMotor
+namespace GameTools
 {
     public class RoundControl
     {

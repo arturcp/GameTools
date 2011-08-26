@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Web;
 
-namespace GameMotor
+namespace GameTools.Xml
 {
     public class XmlActionResult<T> : ActionResult
     {

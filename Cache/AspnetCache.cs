@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Caching;
 
-namespace GameMotor
+namespace GameTools
 {
     public class AspnetCache: ICache
     {

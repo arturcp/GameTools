@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Xml.Serialization;
 
-namespace GameMotor.Xml
+namespace GameTools.Xml
 {
     public class XmlResult : ActionResult
     {

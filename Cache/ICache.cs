@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Caching;
 
-namespace GameMotor
+namespace GameTools
 {
     interface ICache
     {

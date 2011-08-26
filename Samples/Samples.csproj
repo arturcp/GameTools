@@ -96,9 +96,9 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GameMotor.csproj">
+    <ProjectReference Include="..\GameTools.csproj">
       <Project>{313B8B68-29A6-46D3-A5A6-C2949377808D}</Project>
-      <Name>GameMotor</Name>
+      <Name>GameTools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

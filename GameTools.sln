@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameMotor", "GameMotor.csproj", "{313B8B68-29A6-46D3-A5A6-C2949377808D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameTools", "GameTools.csproj", "{313B8B68-29A6-46D3-A5A6-C2949377808D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples.csproj", "{6A2BC290-B301-4D89-A9D3-99FE3C5FB2A5}"
 EndProject

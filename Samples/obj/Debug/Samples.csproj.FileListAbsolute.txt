@@ -7,3 +7,12 @@ C:\Documents and Settings\Usuario\projects\GameMotor\Samples\bin\EntityFramework
 C:\Documents and Settings\Usuario\projects\GameMotor\Samples\obj\Debug\ResolveAssemblyReference.cache
 C:\Documents and Settings\Usuario\projects\GameMotor\Samples\obj\Debug\Samples.dll
 C:\Documents and Settings\Usuario\projects\GameMotor\Samples\obj\Debug\Samples.pdb
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\bin\Samples.dll
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\bin\Samples.pdb
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\bin\EntityFramework.dll
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\bin\GameTools.dll
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\bin\GameTools.pdb
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\bin\EntityFramework.xml
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\obj\Debug\Samples.dll
+C:\Documents and Settings\Usuario\projects\GameTools\Samples\obj\Debug\Samples.pdb
