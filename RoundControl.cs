@@ -12,7 +12,19 @@ namespace GameTools
         private string ExecutionKey { get; set; }
         private string CacheKey { get; set; }
         private XmlLogger xmlLogger;
-        public bool IsRunning { 
+       /* public bool IsRunning
+        {
+            get
+            {
+                return HttpRuntime.Cache.Get(CacheKey) != null;
+            }
+
+            set
+            {
+                HttpRuntime.Cache[CacheKey + ".IsRunning"] = value;
+            }
+        }*/
+       public bool IsRunning { 
             get {
                 var cache = HttpRuntime.Cache;
                 if (cache.Get(CacheKey + ".IsRunning") != null)
@@ -54,7 +66,7 @@ namespace GameTools
             {
                 AspnetCache cache = new AspnetCache();
                 TimeSpan ts = timeToStart - DateTime.Now;
-                cache.Insert("Schedule", "1", now.AddSeconds(ts.Seconds), TimeSpan.Zero, CacheItemPriority.Normal, ScheduleCallback);
+                cache.Insert("Schedule", "1", now.AddMinutes(ts.Minutes), TimeSpan.Zero, CacheItemPriority.Normal, ScheduleCallback);
             }
         }
 
@@ -101,7 +113,9 @@ namespace GameTools
 
                 //Execute round
                 if (OnRoundExecution != null)
-                    try{OnRoundExecution();}catch (Exception error){comment = error.Message;}
+                    try { OnRoundExecution(); }
+                    catch (Exception error) { comment = error.Message; }
+                    finally { IsRunning = false; }
 
                 //Save now on lastExecutionDate
                 DateTime lastExecutionDate = now;
