@@ -42,6 +42,7 @@ namespace GameTools.Xml
         public void Write(DateTime? startedOn, DateTime? finishedOn, string comments) //DateTime executionPlan, 
         {
             XmlDocument document = new XmlDocument();
+            Initialize();
             document.Load(FilePath);
 
             XmlElement round = document.CreateElement("round");
