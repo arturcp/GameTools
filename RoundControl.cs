@@ -37,7 +37,7 @@ namespace GameTools
                 var cache = HttpRuntime.Cache;
                 cache[CacheKey + ".IsRunning"] = value;
             } 
-        }
+        }        
 
         public RoundControl(string executionKey, int roundSpan)
         {
@@ -45,6 +45,7 @@ namespace GameTools
             this.ExecutionKey = executionKey;
             this.CacheKey = string.Concat("RoundStatus.", this.ExecutionKey);
             xmlLogger = new XmlLogger(this.ExecutionKey);
+            //IsRunning = false;
         }
 
         public RoundControl(int roundSpan) : this("default", roundSpan){}
@@ -109,13 +110,13 @@ namespace GameTools
             if (now.Minute % MinutesPerRound == 0 && !hasRun)
             {
                 //TODO create logic to allow rollback
-                //TODO block actions during roung calculation
+                //TODO block actions during round calculation
 
                 //Execute round
                 if (OnRoundExecution != null)
                     try { OnRoundExecution(); }
                     catch (Exception error) { comment = error.Message; }
-                    finally { IsRunning = false; }
+                    //finally { IsRunning = false; }
 
                 //Save now on lastExecutionDate
                 DateTime lastExecutionDate = now;
